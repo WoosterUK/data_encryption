@@ -28,7 +28,7 @@ def encrypt_csv():
 def get_key():
     interface.display_message("Generating a new encryption key...")
     key = generate_key()
-    interface.display_message(f"Your new encryption key is: {key.decode('utf-8')}")
+    interface.display_message(f"Your new encryption key is: {key}")
 
 if __name__ == "__main__":
     interface.display_message("Data Encryption Program")
