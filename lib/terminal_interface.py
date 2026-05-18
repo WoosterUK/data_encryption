@@ -1,9 +1,16 @@
 class __SelectOne():
-    def __init__(self, options):
+    def __init__(self, introduction, options):
+        self.introduction = introduction
         self.options = options
 
     def __str__(self):
         return "\n".join(f"{i+1}. {option}" for i, option in enumerate(self.options))
+    
+    def run(self):
+        if self.introduction is not None:
+            print(self.introduction)
+        print(self)
+        return self.get_user_selection()
 
     def get_option(self, index):
         if 0 <= index < len(self.options):
@@ -44,7 +51,8 @@ class __KeyboardInput():
         return self.introduction
 
     def get_input(self):
-        print(self)
+        if self.introduction is not None:
+            print(self)
         while True:
             user_input = input(self.prompt)
             try:
@@ -68,15 +76,13 @@ def display_message(message):
 def get_user_input(prompt):
     return input(prompt)
 
-def select_option(options):
-    selector = __SelectOne(options)
-    print(selector)
-    return selector.get_user_selection()
+def select_option(introduction, options):
+    selector = __SelectOne(introduction, options)
+    return selector.run()
 
 def yes_no_prompt(prompt):
     print(prompt)
     yes_no = __YesNo()
-    print(yes_no)
     return yes_no.get_user_selection()
 
 def get_keyboard_input(introduction, prompt):
@@ -93,7 +99,7 @@ def get_integer_input(introduction, prompt):
 
 if __name__ == "__main__":
     options = ["Yes / No", "String input", "Numeric input", "Integer input"]
-    selected_option = select_option(options)
+    selected_option = select_option(None, options)
     print(f"You selected: {selected_option}")
 
     if selected_option == "Yes / No":
