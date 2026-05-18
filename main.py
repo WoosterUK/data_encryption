@@ -1,5 +1,5 @@
 import lib.file_handler as file_handler
-from lib.terminal_interface import TerminalInterface
+import lib.terminal_interface as interface
 from lib.encrypt import generate_key
 import os
 
@@ -31,7 +31,6 @@ def get_key():
     interface.display_message(f"Your new encryption key is: {key.decode('utf-8')}")
 
 if __name__ == "__main__":
-    interface = TerminalInterface()
     interface.display_message("Data Encryption Program")
     interface.display_message("=======================")
     interface.display_message("Welcome to the data encryption program")
