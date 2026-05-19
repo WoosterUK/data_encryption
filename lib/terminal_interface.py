@@ -1,3 +1,41 @@
+class __SelectDict():
+    def __init__(self, introduction, options):
+        self.introduction = introduction
+        self.options = options
+        self.validate_options()
+
+    def __str__(self):
+        return "\n".join(f"[{i}] {option}" for i, option in self.options.items())
+    
+    def validate_options(self):
+        if not isinstance(self.options, dict):
+            raise ValueError("Options must be a dictionary")
+        if len(self.options) == 0:
+            raise ValueError("Options dictionary cannot be empty")
+        if len(set(self.options.keys())) != len(self.options):
+            raise ValueError("Option keys must be unique")
+        return True
+    
+    def get_option(self, user_input):
+        if user_input in self.options:
+            return self.options[user_input]
+        else:
+            raise IndexError("Option index out of range")
+    
+    def run(self):
+        if self.introduction is not None:
+            print(self.introduction)
+        print(self)
+        return self.get_user_selection()
+    
+    def get_user_selection(self):
+        while True:
+            try:
+                user_input = input("Please select an option: ")
+                return self.get_option(user_input.lower())
+            except (ValueError, IndexError):
+                print("Invalid selection. Please try again.")
+
 class __SelectOne():
     def __init__(self, introduction, options):
         self.introduction = introduction
@@ -76,6 +114,10 @@ def display_message(message):
 def get_user_input(prompt):
     return input(prompt)
 
+def select_dict(introduction, options):
+    selector = __SelectDict(introduction, options)
+    return selector.run()
+
 def select_option(introduction, options):
     selector = __SelectOne(introduction, options)
     return selector.run()
@@ -98,11 +140,15 @@ def get_integer_input(introduction, prompt):
     return int_input.get_input()
 
 if __name__ == "__main__":
-    options = ["Yes / No", "String input", "Numeric input", "Integer input"]
+    options = ["Dict select", "Yes / No", "String input", "Numeric input", "Integer input"]
     selected_option = select_option(None, options)
     print(f"You selected: {selected_option}")
 
-    if selected_option == "Yes / No":
+    if selected_option == "Dict select":
+        dict_options = {"a": "Option A", "b": "Option B", "c": "Option C"}
+        dict_result = select_dict("Please select an option from the dictionary:", dict_options)
+        print(f"You selected: {dict_result}")
+    elif selected_option == "Yes / No":
         yes_no_result = yes_no_prompt("Do you want to continue?")
         print(f"Your answer: {'Yes' if yes_no_result else 'No'}")
     elif selected_option == "String input":
