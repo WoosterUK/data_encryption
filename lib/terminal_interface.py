@@ -17,7 +17,7 @@ class __SelectDict():
         return True
     
     def get_option(self, user_input):
-        if user_input in self.options:
+        if user_input in self.options.keys():
             return self.options[user_input]
         else:
             raise IndexError("Option index out of range")
@@ -36,33 +36,33 @@ class __SelectDict():
             except (ValueError, IndexError):
                 print("Invalid selection. Please try again.")
 
-class __SelectOne():
+class __SelectOne(__SelectDict):
     def __init__(self, introduction, options):
-        self.introduction = introduction
-        self.options = options
+        options_dict = {str(i+1): option for i, option in enumerate(options)}
+        super().__init__(introduction, options_dict)
 
-    def __str__(self):
-        return "\n".join(f"{i+1}. {option}" for i, option in enumerate(self.options))
+    # def __str__(self):
+    #     return "\n".join(f"{i+1}. {option}" for i, option in enumerate(self.options))
     
-    def run(self):
-        if self.introduction is not None:
-            print(self.introduction)
-        print(self)
-        return self.get_user_selection()
+    # def run(self):
+    #     if self.introduction is not None:
+    #         print(self.introduction)
+    #     print(self)
+    #     return self.get_user_selection()
 
-    def get_option(self, index):
-        if 0 <= index < len(self.options):
-            return self.options[index]
-        else:
-            raise IndexError("Option index out of range")
+    # def get_option(self, index):
+    #     if 0 <= index < len(self.options):
+    #         return self.options[index]
+    #     else:
+    #         raise IndexError("Option index out of range")
     
-    def get_user_selection(self):
-        while True:
-            try:
-                user_input = int(input("Please select an option: ")) - 1
-                return self.get_option(user_input)
-            except (ValueError, IndexError):
-                print("Invalid selection. Please try again.")
+    # def get_user_selection(self):
+    #     while True:
+    #         try:
+    #             user_input = int(input("Please select an option: ")) - 1
+    #             return self.get_option(user_input)
+    #         except (ValueError, IndexError):
+    #             print("Invalid selection. Please try again.")
 
 class __YesNo():
     def __str__(self):
