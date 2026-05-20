@@ -109,7 +109,7 @@ def yes_no_prompt(prompt):
     yes_no = __YesNo()
     return yes_no.get_user_selection()
 
-def create_keyboard_input(category="string", validate_function=str):
+def register_keyboard_input(category="string", validate_function=str):
     current_module = sys.modules[__name__]
     def input_function(introduction, prompt): 
         kb_input = __KeyboardInput(introduction, prompt, category, validate_function)
@@ -117,9 +117,9 @@ def create_keyboard_input(category="string", validate_function=str):
     setattr(current_module, f"get_{category}_input", input_function)
     return True
 
-create_keyboard_input("string", str)
-create_keyboard_input("float", float)
-create_keyboard_input("integer", int)
+register_keyboard_input("string", str)
+register_keyboard_input("float", float)
+register_keyboard_input("integer", int)
 
 if __name__ == "__main__":
     display_heading("Terminal Interface Test", 1)
