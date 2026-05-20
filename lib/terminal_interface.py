@@ -1,3 +1,5 @@
+import sys
+
 class __SelectDict():
     def __init__(self, introduction, options):
         self.introduction = introduction
@@ -78,11 +80,16 @@ class __KeyboardInput():
 def display_message(message):
     print(message)
 
+def display_hline(length=50, char="-"):
+    print(char * length)
+
 def display_heading(heading, level):
     dividers = {1: "=", 2: "-", 3: "~"}
     up_divider = dividers.get(level)
     do_divider = dividers.get(level+1, "")
-    print(f"{up_divider * len(heading)}\n{heading}\n{do_divider * len(heading)}")
+    display_hline(length=len(heading), char=up_divider)
+    display_message(heading)
+    display_hline(length=len(heading), char=do_divider)
 
 def get_user_input(prompt):
     return input(prompt)
@@ -101,7 +108,7 @@ def yes_no_prompt(prompt):
     return yes_no.get_user_selection()
 
 def create_keyboard_input(category="string", validate_function=str):
-    current_module = __import__(__name__)
+    current_module = sys.modules[__name__]
     def input_function(introduction, prompt): 
         kb_input = __KeyboardInput(introduction, prompt, category, validate_function)
         return kb_input.get_input()
