@@ -43,6 +43,12 @@ class __SelectOne(__SelectDict):
     def __init__(self, introduction, options):
         options_dict = {str(i+1): option for i, option in enumerate(options)}
         super().__init__(introduction, options_dict)
+    
+    def old_run(self):
+        return super().run()
+
+    def run(self):
+        return str(int(super().run())-1)
 
 class __YesNo():
     def __str__(self):
@@ -79,12 +85,25 @@ class __KeyboardInput():
                 print(f"Invalid input. Please enter a value of type: {self.category}.")
 
 def display_message(message):
+    """
+    Displays a message to the terminal.
+    """
     print(message)
 
 def display_hline(length=50, char="-"):
+    """
+    Displays a horizontal line in the terminal.
+     - length: The length of the line (default: 50)
+     - char: The character to use for the line (default: '-')
+    """
     print(char * length)
 
 def display_heading(heading, level):
+    """
+    Displays a heading in the terminal.
+     - heading: The text of the heading
+     - level: The level of the heading (1, 2, or 3)
+    """
     dividers = {1: "=", 2: "-", 3: "~"}
     up_divider = dividers.get(level)
     do_divider = dividers.get(level+1, "")
@@ -93,23 +112,49 @@ def display_heading(heading, level):
     display_message(title)
     display_hline(length=len(title), char=do_divider)
 
-def get_user_input(prompt):
-    return input(prompt)
-
 def select_dict(introduction, options):
+    """
+    Displays a list of options in the terminal and prompts the user to select one.
+        - introduction: A message to display before the options (can be None)
+        - options: A dictionary of options, where the keys are the option indices and the values are the option descriptions
+    Returns the key of the selected option as a string.
+    """
     selector = __SelectDict(introduction, options)
     return selector.run()
 
 def select_option(introduction, options):
+    """
+    Displays a list of options in the terminal and prompts the user to select one.
+        - introduction: A message to display before the options (can be None)
+        - options: A list of option descriptions
+    Returns the index of the selected option, zero-based, as a string.
+    """
     selector = __SelectOne(introduction, options)
     return selector.run()
 
 def yes_no_prompt(prompt):
+    """
+    Displays a yes/no prompt in the terminal and returns the user's selection as a boolean.
+        - prompt: The message to display before the options
+    Returns True for "Yes" and False for "No".
+    Accepts "Yes", "Y", "No", "N" (case-insensitive) as valid inputs.
+    Continues to prompt until a valid input is received.
+    """
     print(prompt)
     yes_no = __YesNo()
     return yes_no.get_user_selection()
 
 def register_keyboard_input(category="string", validate_function=str):
+    """
+    Registers a new keyboard input function for a specific category.
+        - category: The name of the input category (e.g., "string", "float", "integer")
+        - validate_function: A function that takes a string input and validates it, returning the validated value or raising a ValueError if invalid.
+    This function dynamically creates a new input function named get_{category}_input,
+    which takes as arguments an introduction message and a prompt, and returns the validated user input.
+        - introduction: A message to display before the input prompt (can be None)
+        - prompt: The message to display as the input prompt
+    The new function will be added to the current module's namespace and can be called as get_{category}_input(introduction, prompt).
+    """
     current_module = sys.modules[__name__]
     funcname = f"get_{category}_input"
     if hasattr(current_module, funcname):
@@ -129,9 +174,9 @@ if __name__ == "__main__":
     display_heading("Terminal Interface Test", 1)
     options = ["Dict select", "Yes / No", "String input", "Float input", "Integer input"]
     selected_option = select_option(None, options)
-    print(f"You selected: {selected_option}")
+    print(f"You selected: {int(selected_option)+1}")
 
-    selected_option = options[int(selected_option)-1]
+    selected_option = options[int(selected_option)]
 
     if selected_option == "Dict select":
         dict_options = {"a": "Option A", "b": "Option B", "c": "Option C"}
