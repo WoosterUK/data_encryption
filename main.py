@@ -12,7 +12,7 @@ def show_help():
     interface.display_message("To use the program, simply follow the prompts to select a CSV file and enter your encryption key.")
     interface.display_message("It will ignore the header row. All other values in the first column will be encrypted and saved to a new file.")
     interface.display_message("The new file will have the same name as the original, but with '_encrypted' appended before the file extension.")
-    interface.get_keyboard_input(None, "Press Enter to return to the main menu:")
+    interface.get_string_input(None, "Press Enter to return to the main menu:")
 
 def encrypt_csv():
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -21,7 +21,7 @@ def encrypt_csv():
     if not files:
         interface.display_message("No CSV files found in the current directory.")
     else:
-        encryption_key = interface.get_keyboard_input(
+        encryption_key = interface.get_string_input(
             "Please enter the encryption key:",
             "Encryption Key: "
         )
