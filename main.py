@@ -1,12 +1,10 @@
 import lib.file_handler as file_handler
-import lib.terminal_interface as interface
+from lib import terminal_interface as interface
 from lib.encrypt import generate_key
 import os
 
 def show_help():
-    interface.display_message("================")
-    interface.display_message("User information")
-    interface.display_message("----------------")
+    interface.display_heading("User information", 2)
     interface.display_message("This program is designed to help you encrypt the first column of a CSV file.")
     interface.display_message("It requires a key formatted in a particular way; you can generate this key using this program.")
     interface.display_message("To use the program, simply follow the prompts to select a CSV file and enter your encryption key.")
@@ -36,8 +34,7 @@ def get_key():
     interface.display_message(f"Your new encryption key is: {key}")
 
 if __name__ == "__main__":
-    interface.display_message("Data Encryption Program")
-    interface.display_message("=======================")
+    interface.display_heading("Data Encryption Program", 1)
     interface.display_message("Welcome to the data encryption program")
     options = {
         "Encrypt a CSV file": encrypt_csv,
@@ -47,7 +44,7 @@ if __name__ == "__main__":
     }
     while True:
         selected_option = interface.select_option(
-            "=" * 9 + "\nMain menu\n" + "-" * 9,
+            interface.display_heading("Main Menu", 2),
             list(options.keys())
         )
         options[selected_option]()
