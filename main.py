@@ -37,15 +37,15 @@ if __name__ == "__main__":
     interface.display_heading("Data Encryption Program", 1)
     interface.display_message("Welcome to the data encryption program")
     options = {
-        "Encrypt a CSV file": encrypt_csv,
-        "Generate a new encryption key": get_key,
-        "Help": show_help,
-        "Quit": exit
+        "g": ("Generate a new encryption key", get_key),
+        "e": ("Encrypt a CSV file", encrypt_csv),
+        "h": ("Help", show_help),
+        "q": ("Quit", exit)
     }
     while True:
-        selected_option = interface.select_option(
+        selected_option = interface.select_dict(
             interface.display_heading("Main Menu", 2),
-            list(options.keys())
+            dict((key, value[0]) for key, value in options.items())
         )
-        options[selected_option]()
+        options[selected_option][1]()
     

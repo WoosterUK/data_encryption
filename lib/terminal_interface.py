@@ -34,7 +34,8 @@ class __SelectDict():
         while True:
             try:
                 user_input = input("Please select an option: ")
-                return self.get_option(user_input.lower())
+                self.get_option(user_input)
+                return user_input
             except (ValueError, IndexError):
                 print("Invalid selection. Please try again.")
 
@@ -87,9 +88,10 @@ def display_heading(heading, level):
     dividers = {1: "=", 2: "-", 3: "~"}
     up_divider = dividers.get(level)
     do_divider = dividers.get(level+1, "")
-    display_hline(length=len(heading), char=up_divider)
-    display_message(heading)
-    display_hline(length=len(heading), char=do_divider)
+    title = "#" * (4-level) + " " + heading + " " + "#" * (4-level)
+    display_hline(length=len(title), char=up_divider)
+    display_message(title)
+    display_hline(length=len(title), char=do_divider)
 
 def get_user_input(prompt):
     return input(prompt)
@@ -124,6 +126,8 @@ if __name__ == "__main__":
     options = ["Dict select", "Yes / No", "String input", "Float input", "Integer input"]
     selected_option = select_option(None, options)
     print(f"You selected: {selected_option}")
+
+    selected_option = options[int(selected_option)-1]
 
     if selected_option == "Dict select":
         dict_options = {"a": "Option A", "b": "Option B", "c": "Option C"}
