@@ -78,6 +78,12 @@ class __KeyboardInput():
 def display_message(message):
     print(message)
 
+def display_heading(heading, level):
+    dividers = {1: "=", 2: "-", 3: "~"}
+    up_divider = dividers.get(level)
+    do_divider = dividers.get(level+1, "")
+    print(f"{up_divider * len(heading)}\n{heading}\n{do_divider * len(heading)}")
+
 def get_user_input(prompt):
     return input(prompt)
 
@@ -107,6 +113,7 @@ create_keyboard_input("float", float)
 create_keyboard_input("integer", int)
 
 if __name__ == "__main__":
+    display_heading("Terminal Interface Test", 1)
     options = ["Dict select", "Yes / No", "String input", "Float input", "Integer input"]
     selected_option = select_option(None, options)
     print(f"You selected: {selected_option}")
