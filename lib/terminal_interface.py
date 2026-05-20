@@ -111,11 +111,15 @@ def yes_no_prompt(prompt):
 
 def register_keyboard_input(category="string", validate_function=str):
     current_module = sys.modules[__name__]
-    def input_function(introduction, prompt): 
-        kb_input = __KeyboardInput(introduction, prompt, category, validate_function)
-        return kb_input.get_input()
-    setattr(current_module, f"get_{category}_input", input_function)
-    return True
+    funcname = f"get_{category}_input"
+    if hasattr(current_module, funcname):
+        raise ValueError(f"{funcname} already exists.")
+    else:
+        def input_function(introduction, prompt): 
+            kb_input = __KeyboardInput(introduction, prompt, category, validate_function)
+            return kb_input.get_input()
+        setattr(current_module, funcname, input_function)
+        return True
 
 register_keyboard_input("string", str)
 register_keyboard_input("float", float)
