@@ -41,29 +41,6 @@ class __SelectOne(__SelectDict):
         options_dict = {str(i+1): option for i, option in enumerate(options)}
         super().__init__(introduction, options_dict)
 
-    # def __str__(self):
-    #     return "\n".join(f"{i+1}. {option}" for i, option in enumerate(self.options))
-    
-    # def run(self):
-    #     if self.introduction is not None:
-    #         print(self.introduction)
-    #     print(self)
-    #     return self.get_user_selection()
-
-    # def get_option(self, index):
-    #     if 0 <= index < len(self.options):
-    #         return self.options[index]
-    #     else:
-    #         raise IndexError("Option index out of range")
-    
-    # def get_user_selection(self):
-    #     while True:
-    #         try:
-    #             user_input = int(input("Please select an option: ")) - 1
-    #             return self.get_option(user_input)
-    #         except (ValueError, IndexError):
-    #             print("Invalid selection. Please try again.")
-
 class __YesNo():
     def __str__(self):
         return "1. Yes\n2. No"
@@ -79,10 +56,10 @@ class __YesNo():
                 print("Invalid selection. Please enter 'Yes' or 'No'.")
 
 class __KeyboardInput():
-    def __init__(self, introduction, prompt, category="string"):
+    def __init__(self, introduction, prompt, category="string", validate_function=str):
         self.introduction = introduction
         self.prompt = prompt
-        self.validate_function = str
+        self.validate_function = validate_function
         self.category = category
     
     def __str__(self):
@@ -96,17 +73,7 @@ class __KeyboardInput():
             try:
                 return self.validate_function(user_input)
             except ValueError:
-                print(f"Invalid input. Please enter a {self.category} value.")
-
-class __NumericInput(__KeyboardInput):
-    def __init__(self, introduction, prompt):
-        super().__init__(introduction, prompt, "numeric")
-        self.validate_function = lambda x: float(x)
-
-class __IntegerInput(__KeyboardInput):
-    def __init__(self, introduction, prompt):
-        super().__init__(introduction, prompt, "integer")
-        self.validate_function = lambda x: int(x)
+                print(f"Invalid input. Please enter a value of type: {self.category}.")
 
 def display_message(message):
     print(message)
@@ -127,20 +94,20 @@ def yes_no_prompt(prompt):
     yes_no = __YesNo()
     return yes_no.get_user_selection()
 
-def get_keyboard_input(introduction, prompt):
-    kb_input = __KeyboardInput(introduction, prompt)
-    return kb_input.get_input()
+def create_keyboard_input(category="string", validate_function=str):
+    current_module = __import__(__name__)
+    def input_function(introduction, prompt): 
+        kb_input = __KeyboardInput(introduction, prompt, category, validate_function)
+        return kb_input.get_input()
+    setattr(current_module, f"get_{category}_input", input_function)
+    return True
 
-def get_numeric_input(introduction, prompt):
-    num_input = __NumericInput(introduction, prompt)
-    return num_input.get_input()
-
-def get_integer_input(introduction, prompt):
-    int_input = __IntegerInput(introduction, prompt)
-    return int_input.get_input()
+create_keyboard_input("string", str)
+create_keyboard_input("float", float)
+create_keyboard_input("integer", int)
 
 if __name__ == "__main__":
-    options = ["Dict select", "Yes / No", "String input", "Numeric input", "Integer input"]
+    options = ["Dict select", "Yes / No", "String input", "Float input", "Integer input"]
     selected_option = select_option(None, options)
     print(f"You selected: {selected_option}")
 
@@ -152,10 +119,10 @@ if __name__ == "__main__":
         yes_no_result = yes_no_prompt("Do you want to continue?")
         print(f"Your answer: {'Yes' if yes_no_result else 'No'}")
     elif selected_option == "String input":
-        kb_input_result = get_keyboard_input("Please enter a string:", "Input: ", "string")
+        kb_input_result = get_string_input("Please enter a string:", "Input: ")
         print(f"You entered: {kb_input_result}")
-    elif selected_option == "Numeric input":
-        num_input_result = get_numeric_input("Please enter a numeric value:", "Input: ")
+    elif selected_option == "Float input":
+        num_input_result = get_float_input("Please enter a float value:", "Input: ")
         print(f"You entered: {num_input_result}")
     elif selected_option == "Integer input":
         int_input_result = get_integer_input("Please enter an integer value:", "Input: ")
